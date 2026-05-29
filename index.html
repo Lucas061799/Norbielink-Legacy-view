@@ -13,7 +13,7 @@
   }
 
   body {
-    font-family: "Adelle Sans SemiBold", Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     background-color: #ffffff;
     color: #000000;
     padding: 40px 20px;
@@ -37,7 +37,7 @@
   }
 
   .panel-heading h2 {
-    font-family: "Adelle Sans SemiBold", Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     color: #000000;
     font-size: 14px;
     font-weight: 600;
@@ -64,7 +64,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-family: "Adelle Sans SemiBold", Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 11.5px;
     font-weight: 500;
     color: #000000;
@@ -262,10 +262,6 @@
     height: 50px;
   }
 
-  /* 2-logo case: align with positions 2 and 3 of the 3-logo grid */
-  .partner-logos:has(> img:nth-child(2):last-child) > img:first-child {
-    grid-column: 2;
-  }
 
   /* Small card buttons */
   .portal-card {
@@ -335,7 +331,6 @@
   .logo-partner[alt="Levanta"] {
     height: 46px;
     max-width: 115px;
-    transform: translateX(-32px);
   }
 
   .logo-partner[alt="RLI"] {
@@ -366,14 +361,14 @@
 
   /* Square logo grid (used by Professional Liability modal) */
   .square-grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     padding: 0 32px 32px;
   }
 
   .square-card {
-    flex: 1;
-    height: 140px;
+    aspect-ratio: 1 / 1;
     background: #ffffff;
     border: 1px solid #E5E7EB;
     border-radius: 10px;
@@ -381,7 +376,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: 8px;
     position: relative;
     cursor: pointer;
     transition: border-color 0.15s ease;
@@ -390,8 +385,8 @@
   .square-card-label {
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 20px;
+    font-size: 13px;
+    line-height: 16px;
     color: #101828;
     text-align: center;
   }
@@ -446,8 +441,8 @@
 
   .square-card img {
     width: auto;
-    height: 48px;
-    max-width: 75%;
+    height: 38px;
+    max-width: 70%;
     object-fit: contain;
   }
 
@@ -791,7 +786,7 @@
         <div class="square-card">
           <svg class="external-icon" viewBox="0 -960 960 960" fill="currentColor"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg>
           <img src="data:image/png;base64,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" alt="USLI">
-          <div class="square-card-label">Land &amp; Commercial</div>
+          <div class="square-card-label">Land &amp;<br>Commercial</div>
         </div>
       </div>
     </div>
