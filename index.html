@@ -114,61 +114,105 @@
   }
   .bop-expand-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: 180px 165px 165px 165px;
     gap: 14px;
+    justify-content: start;
   }
   .bop-vendor-box {
-    background: linear-gradient(180deg, #e6f1e6 0%, #c9e2c9 100%);
+    position: relative;
+    background: linear-gradient(180deg, #ffffff 0%, #e6f1e6 50%, #c9e2c9 100%);
     border: 1px solid #b6d4b6;
-    border-radius: 10px;
-    padding: 14px 10px;
+    border-radius: 8px;
+    padding: 11px 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     font-family: 'Montserrat', sans-serif;
-    font-size: 11.5px;
+    font-size: 10px;
     font-weight: 600;
-    color: #1f3a1f;
+    color: #201154;
     line-height: 1.25;
     cursor: pointer;
-    min-height: 130px;
+    width: 165px;
+    height: 180px;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
   }
   .bop-vendor-box:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
   }
   .bop-vendor-logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 8px 0;
-    min-height: 36px;
+    margin: 4px 0;
+    min-height: 60px;
   }
   .bop-vendor-logo img {
-    max-height: 40px;
-    max-width: 90%;
+    max-height: 76px;
+    max-width: 100%;
     object-fit: contain;
+  }
+  .bop-vendor-box[data-vendor="usli"] .bop-vendor-logo img {
+    max-height: 61px;
+  }
+  .bop-vendor-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #201154;
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    line-height: 1;
+    pointer-events: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+  .bop-vendor-card-marketplace {
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .bop-vendor-card-marketplace img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .bop-vendor-card-marketplace:hover {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));
   }
   .bop-vendor-label,
   .bop-vendor-label-top {
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.25px;
   }
   .bop-vendor-sub {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 500;
     color: #3a5c3a;
-    margin-top: 4px;
+    margin-top: 3px;
   }
   @media (max-width: 1100px) {
-    .bop-expand-grid { grid-template-columns: repeat(3, 1fr); }
+    .bop-expand-grid { grid-template-columns: repeat(3, 180px); }
   }
   @media (max-width: 700px) {
-    .bop-expand-grid { grid-template-columns: repeat(2, 1fr); }
+    .bop-expand-grid { grid-template-columns: repeat(2, 160px); }
+    .bop-vendor-box,
+    .bop-vendor-card-marketplace { width: 160px; height: 160px; }
   }
 
   /* ----- Modal ----- */
@@ -633,25 +677,23 @@
 
       <div class="bop-expand" id="bopExpand" aria-hidden="true">
         <div class="bop-expand-grid">
-          <div class="bop-vendor-box" data-vendor="btis">
-            <div class="bop-vendor-logo"></div>
-            <div class="bop-vendor-label">BOP<br>Marketplace</div>
-          </div>
+          <a class="bop-vendor-card-marketplace" data-vendor="marketplace">
+            <img src="non-contractors-gl-bop.png" alt="Non Contractors GL / BOP">
+          </a>
           <div class="bop-vendor-box" data-vendor="usli">
+            <span class="bop-vendor-tag">Keep Same</span>
             <div class="bop-vendor-label-top">BOP / GL</div>
             <div class="bop-vendor-logo"></div>
             <div class="bop-vendor-sub">Web/Phone Quote</div>
           </div>
           <div class="bop-vendor-box" data-vendor="usli">
+            <span class="bop-vendor-tag">Keep Same</span>
             <div class="bop-vendor-label-top">Lessor's Risk</div>
             <div class="bop-vendor-logo"></div>
             <div class="bop-vendor-sub">Web/Phone Quote</div>
           </div>
-          <div class="bop-vendor-box" data-vendor="rli">
-            <div class="bop-vendor-label-top">HOME BASED<br>BUSINESS</div>
-            <div class="bop-vendor-logo"></div>
-          </div>
           <div class="bop-vendor-box" data-vendor="hiscox">
+            <span class="bop-vendor-tag">Keep Same</span>
             <div class="bop-vendor-label-top">BOP General Liability<br>E&amp;O</div>
             <div class="bop-vendor-logo"></div>
           </div>
@@ -1190,6 +1232,17 @@
           img.src = src;
           img.alt = vendor;
           logoSlot.appendChild(img);
+        }
+      });
+
+      // Partner logos for the marketplace box (Coterie, Great American, HISCOX, CNA)
+      bopExpand.querySelectorAll('.bop-partner-slot').forEach((slot) => {
+        const src = findSrc(bopModal, slot.dataset.partner);
+        if (src) {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = slot.dataset.partner;
+          slot.appendChild(img);
         }
       });
 
