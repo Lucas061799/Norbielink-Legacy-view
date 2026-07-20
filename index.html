@@ -60,6 +60,7 @@
   }
 
   .submission-card {
+    position: relative;
     background-color: #ffffff;
     border: 1px solid transparent;
     border-radius: 3px;
@@ -82,6 +83,24 @@
 
   .submission-card:hover {
     border-color: #79c879;
+  }
+
+  /* NEW badge — mirrors the razz-purple pill on the NorbieLink design tiles. */
+  .submission-card-new {
+    position: absolute;
+    top: -7px;
+    right: -6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8.5px;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(90deg, #5C2ED4 0%, #A614C3 65%);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 7px;
+    border-radius: 9999px;
+    box-shadow: 0 1px 3px rgba(166, 20, 195, 0.35);
+    pointer-events: none;
   }
 
   @media (max-width: 1100px) {
@@ -493,7 +512,7 @@
     font-size: 10.5px;
     font-weight: 700;
     color: #ffffff;
-    background: #79c879;
+    background: linear-gradient(90deg, #5C2ED4 0%, #A614C3 65%);
     letter-spacing: 1px;
     padding: 3px 10px;
     border-radius: 3px;
@@ -792,7 +811,7 @@
 
         <div class="submission-card" data-modal="builders">BUILDERS<br>RISK</div>
         <div class="submission-card" data-modal="vacant">VACANT<br>RISKS</div>
-        <div class="submission-card" data-modal="inland">INLAND<br>MARINE</div>
+        <div class="submission-card" data-modal="inland"><span class="submission-card-new">New</span>INLAND<br>MARINE</div>
         <div class="submission-card" data-modal="special">SPECIAL<br>EVENTS</div>
         <div class="submission-card" data-modal="hbb">HOME BASED<br>BUSINESS</div>
         <div class="submission-card">CYBER<br>RISK</div>
@@ -801,8 +820,8 @@
         <div class="submission-card">POLLUTION<br>LIABILITY</div>
         <div class="submission-card">CANNABIS</div>
         <div class="submission-card">BOAT/MARINA<br>CONTRACTORS GL</div>
-        <div class="submission-card" data-modal="personal">PERSONAL<br>LINES</div>
-        <div class="submission-card" data-modal="community">AFFINITY<br>LINES</div>
+        <div class="submission-card" data-modal="personal"><span class="submission-card-new">New</span>PERSONAL<br>LINES</div>
+        <div class="submission-card" data-modal="community"><span class="submission-card-new">New</span>AFFINITY<br>LINES</div>
       </div>
 
       <div class="bop-expand" id="bopExpand" aria-hidden="true">
@@ -850,7 +869,7 @@
 
         <div class="submission-card" data-modal="builders">BUILDERS<br>RISK</div>
         <div class="submission-card" data-modal="vacant">VACANT<br>RISKS</div>
-        <div class="submission-card" data-modal="inland">INLAND<br>MARINE</div>
+        <div class="submission-card" data-modal="inland"><span class="submission-card-new">New</span>INLAND<br>MARINE</div>
         <div class="submission-card" data-modal="special">SPECIAL<br>EVENTS</div>
         <div class="submission-card" data-modal="hbb">HOME BASED<br>BUSINESS</div>
         <div class="submission-card">CYBER<br>RISK</div>
@@ -859,8 +878,8 @@
         <div class="submission-card">POLLUTION<br>LIABILITY</div>
         <div class="submission-card">CANNABIS</div>
         <div class="submission-card">BOAT/MARINA<br>CONTRACTORS GL</div>
-        <div class="submission-card" data-modal="personal">PERSONAL<br>LINES</div>
-        <div class="submission-card" data-modal="community">AFFINITY<br>LINES</div>
+        <div class="submission-card" data-modal="personal"><span class="submission-card-new">New</span>PERSONAL<br>LINES</div>
+        <div class="submission-card" data-modal="community"><span class="submission-card-new">New</span>AFFINITY<br>LINES</div>
       </div>
     </div>
   </div>
