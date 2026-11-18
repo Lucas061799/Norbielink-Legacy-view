@@ -37,6 +37,15 @@
   .sidebar > :not(.back-link) { position: relative; z-index: 1; }
   .back-link { z-index: 1; }
   body.on-thanks .sidebar > :not(.back-link) { display: none; }
+  .layout-options { list-style: none; padding: 0; margin: 10px 0 0 2px; display: none; gap: 6px; }
+  body.on-quote .layout-options { display: grid; }
+  .layout-options button {
+    border: 0; background: none; padding: 0; cursor: pointer;
+    font: 500 12px 'Montserrat', sans-serif; letter-spacing: 0.3px; color: #ffffff;
+  }
+  .layout-options button:hover { text-decoration: underline; }
+  .layout-options button[aria-pressed="true"] { color: #26265a; font-weight: 700; }
+  .layout-options button:focus-visible { outline: 2px solid #26265a; outline-offset: 2px; }
   .back-link {
     position: absolute; top: 32px; left: 36px;
     font-size: 12px; font-weight: 600; color: #3f5a46; text-decoration: none;
@@ -73,6 +82,23 @@
   .card-group.occurrence .group-label { background: transparent; color: #3f5a46; }
   .card-group.claims { background: linear-gradient(180deg, #d6d9de 0%, #bfc3ca 55%, #a7acb6 100%); background-origin: border-box; }
   .card-group.claims .group-label { background: transparent; color: #4a4f5a; }
+  /* Plain layout (contractor-gl.html?layout=plain): group headings only, no shaded boxes */
+  body.plain-groups .card-group { background: none; border-color: transparent; padding: 0; }
+  body.plain-groups .quotes { column-gap: 24px; }
+  body.plain-groups .card-group .group-label {
+    margin: 0; border-radius: 0; background: transparent; color: #3f5a46;
+    border-bottom: 3px solid #7cc49a;
+  }
+  body.plain-groups .card-group.claims .group-label { color: #4a4f5a; border-bottom-color: #b3b7c0; }
+  /* Mixed layout (?layout=mixed): Occurrence plain, Claims-Made keeps its grey box to flag it as the exception */
+  body.mixed-groups .card-group.occurrence { background: none; border-color: transparent; padding: 0 0 14px; }
+  body.mixed-groups .card-group.occurrence .group-label {
+    margin: 0; border-radius: 0; background: transparent;
+    font-size: 11px; font-weight: 600; color: #8a8f9c;
+    border-bottom: 1px solid #c9d6cb;
+  }
+  body.mixed-groups .quotes { column-gap: 24px; }
+  body.mixed-groups .card-group.claims { background: linear-gradient(180deg, #eef0f2 0%, #e3e5e9 55%, #d7dae0 100%); background-origin: border-box; }
   .group-cards { display: flex; gap: 14px; align-items: stretch; flex-wrap: wrap; justify-content: flex-start; flex: 1; }
   .group-label {
     height: 28px; display: flex; align-items: center; justify-content: center;
@@ -296,7 +322,13 @@
     <ul class="steps">
       <li data-stage="applicant">Applicant Information</li>
       <li data-stage="operations">Business Operations</li>
-      <li data-stage="price">Price Indication</li>
+      <li data-stage="price">Price Indication
+        <ul class="layout-options" aria-label="Price layout options">
+          <li><button type="button" data-layout="shaded">Option 01</button></li>
+          <li><button type="button" data-layout="plain">Option 02</button></li>
+          <li><button type="button" data-layout="mixed">Option 03</button></li>
+        </ul>
+      </li>
     </ul>
   </aside>
 
@@ -540,6 +572,22 @@
       });
     });
 
+    // ?layout=plain drops the shaded group boxes; ?layout=mixed shades only Claims-Made
+    function setLayout(name) {
+      document.body.classList.toggle('plain-groups', name === 'plain');
+      document.body.classList.toggle('mixed-groups', name === 'mixed');
+      document.querySelectorAll('[data-layout]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.layout === name)));
+      // Keep the choice in the URL so a refresh or shared link opens the same layout
+      try {
+        const url = new URL(location.href);
+        if (name === 'shaded') url.searchParams.delete('layout'); else url.searchParams.set('layout', name);
+        history.replaceState(null, '', url);
+      } catch (e) { /* URL not writable here (e.g. some previews); the layout still switches */ }
+    }
+    document.querySelectorAll('[data-layout]').forEach((b) => b.addEventListener('click', () => setLayout(b.dataset.layout)));
+    const startLayout = new URLSearchParams(location.search).get('layout');
+    setLayout(['plain', 'mixed'].includes(startLayout) ? startLayout : 'shaded');
+
     // Screen flow: applicant -> business -> operations -> quote -> thanks, kept in the URL hash
     const screens = [...document.querySelectorAll('.screen')];
     const names = screens.map((s) => s.dataset.screen);
@@ -547,6 +595,7 @@
       const screen = screens.find((s) => s.dataset.screen === name) || screens[0];
       screens.forEach((s) => { s.hidden = s !== screen; });
       document.body.classList.toggle('on-thanks', screen.dataset.screen === 'thanks');
+      document.body.classList.toggle('on-quote', screen.dataset.screen === 'quote');
       document.getElementById('progressFill').style.width = screen.dataset.progress + '%';
       document.getElementById('progressPct').textContent = screen.dataset.progress + '%';
       document.querySelectorAll('.steps li').forEach((li) => li.classList.toggle('current', li.dataset.stage === screen.dataset.stage));
