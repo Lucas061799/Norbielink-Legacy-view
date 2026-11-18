@@ -87,7 +87,7 @@
   .card-group.occurrence .group-label { background: transparent; color: #3f5a46; }
   .card-group.claims { background: linear-gradient(180deg, #d6d9de 0%, #bfc3ca 55%, #a7acb6 100%); background-origin: border-box; }
   .card-group.claims .group-label { background: transparent; color: #4a4f5a; }
-  /* Plain layout (contractor-gl.html?layout=plain): group headings only, no shaded boxes */
+  /* Plain layout (Option 01, the default): group headings only, no shaded boxes */
   body.plain-groups .card-group { background: none; border-color: transparent; padding: 0; }
   body.plain-groups .quotes { column-gap: 24px; }
   body.plain-groups .card-group .group-label {
@@ -95,14 +95,17 @@
     border-bottom: 3px solid #7cc49a;
   }
   body.plain-groups .card-group.claims .group-label { color: #4a4f5a; border-bottom-color: #b3b7c0; }
-  /* Mixed layout (?layout=mixed): Occurrence plain, Claims-Made keeps its grey box to flag it as the exception */
-  body.mixed-groups .card-group.occurrence { background: none; border-color: transparent; padding: 0 0 14px; }
-  body.mixed-groups .card-group.occurrence .group-label {
-    margin: 0; border-radius: 0; background: transparent;
-    font-size: 11px; font-weight: 600; color: #8a8f9c;
-    border-bottom: 1px solid #c9d6cb;
+  /* Mixed layout (Option 03, ?layout=mixed): Occurrence outlined in the sidebar gradient, light grey box around Claims-Made */
+  body.mixed-groups .card-group.occurrence {
+    /* page colour inside, sidebar gradient showing through the transparent border as the outline */
+    border-color: transparent;
+    background: linear-gradient(#fafafa, #fafafa) padding-box,
+                linear-gradient(180deg, #bcd9a0 0%, #a6d1a6 55%, #8fcdb4 100%) border-box;
   }
-  body.mixed-groups .quotes { column-gap: 24px; }
+  body.mixed-groups .card-group.occurrence .group-label {
+    /* top slice of the sidebar gradient, so the bar flows into the outline fading down the sides */
+    background: linear-gradient(180deg, #bcd9a0 0%, #b6d7a2 100%); color: #ffffff;
+  }
   body.mixed-groups .card-group.claims { background: linear-gradient(180deg, #eef0f2 0%, #e3e5e9 55%, #d7dae0 100%); background-origin: border-box; }
   .group-cards { display: flex; gap: 14px; align-items: stretch; flex-wrap: wrap; justify-content: flex-start; flex: 1; }
   .group-label {
@@ -329,8 +332,8 @@
       <li data-stage="operations">Business Operations</li>
       <li data-stage="price">Price Indication
         <ul class="layout-options" aria-label="Price layout options">
-          <li><button type="button" data-layout="shaded">Option 01</button></li>
-          <li><button type="button" data-layout="plain">Option 02</button></li>
+          <li><button type="button" data-layout="plain">Option 01</button></li>
+          <li><button type="button" data-layout="shaded">Option 02</button></li>
           <li><button type="button" data-layout="mixed">Option 03</button></li>
         </ul>
       </li>
@@ -582,7 +585,6 @@
       });
     });
 
-    // ?layout=plain drops the shaded group boxes; ?layout=mixed shades only Claims-Made
     function setLayout(name) {
       document.body.classList.toggle('plain-groups', name === 'plain');
       document.body.classList.toggle('mixed-groups', name === 'mixed');
@@ -590,13 +592,14 @@
       // Keep the choice in the URL so a refresh or shared link opens the same layout
       try {
         const url = new URL(location.href);
-        if (name === 'shaded') url.searchParams.delete('layout'); else url.searchParams.set('layout', name);
+        if (name === 'plain') url.searchParams.delete('layout'); else url.searchParams.set('layout', name);
         history.replaceState(null, '', url);
       } catch (e) { /* URL not writable here (e.g. some previews); the layout still switches */ }
     }
     document.querySelectorAll('[data-layout]').forEach((b) => b.addEventListener('click', () => setLayout(b.dataset.layout)));
+    // Option 01 (plain) is the default; ?layout=shaded or ?layout=mixed pick the others
     const startLayout = new URLSearchParams(location.search).get('layout');
-    setLayout(['plain', 'mixed'].includes(startLayout) ? startLayout : 'shaded');
+    setLayout(['shaded', 'mixed'].includes(startLayout) ? startLayout : 'plain');
 
     // Screen flow: applicant -> business -> operations -> quote -> thanks, kept in the URL hash
     const screens = [...document.querySelectorAll('.screen')];
