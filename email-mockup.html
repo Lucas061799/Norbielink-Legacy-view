@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riveter Approval Email – Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #eef0f3; color: #1f1f2b;
+    font-family: 'Segoe UI', 'Montserrat', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Mockup banner (not part of the email) */
+  .banner {
+    background: #26205e; color: #ffffff; font: 500 13px 'Montserrat', sans-serif;
+    padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; justify-content: space-between;
+  }
+  .banner a { color: #ffffff; text-decoration: underline; text-decoration-color: #7cc49a; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+  /* Mail client chrome */
+  .client { max-width: 1100px; margin: 24px auto; background: #ffffff; border: 1px solid #dfe2e7; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  .subject { font-size: 20px; padding: 18px 24px 8px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; padding: 6px 24px; }
+  .avatar {
+    width: 48px; height: 48px; border-radius: 50%; background: #26265a; color: #ffffff;
+    display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; flex-shrink: 0;
+  }
+  .from { flex: 1; min-width: 220px; font-size: 14px; line-height: 1.5; }
+  .from .addr { color: #555; }
+  .from .to { font-size: 12.5px; color: #555; }
+  .actions { display: flex; gap: 0; border: 1px solid #dfe2e7; border-radius: 4px; overflow: hidden; font-size: 12.5px; }
+  .actions span { padding: 7px 12px; border-right: 1px solid #dfe2e7; color: #333; }
+  .actions span:last-child { border-right: 0; }
+  .date { width: 100%; text-align: right; font-size: 12px; color: #555; margin-top: -4px; }
+  .attachments { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 24px 14px; border-bottom: 1px solid #eceef1; }
+  .file { display: flex; align-items: center; gap: 8px; border: 1px solid #dfe2e7; border-radius: 4px; padding: 6px 10px; font-size: 12.5px; }
+  .file .pdf { width: 20px; height: 24px; border: 2px solid #d13438; border-radius: 2px; color: #d13438; font-size: 7px; font-weight: 700; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 2px; }
+  .file .size { color: #777; }
+
+  /* Email body */
+  .mail { max-width: 680px; margin: 0 auto; padding: 28px 24px 40px; font-size: 15px; line-height: 1.55; }
+  .mail-head {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 18px 22px; border-radius: 8px 8px 0 0;
+    background: linear-gradient(180deg, #d6d9de 0%, #bfc3ca 100%);
+  }
+  .riveter {
+    display: inline-flex; flex-direction: column; align-items: center; gap: 3px;
+    font: 600 26px/1 'Montserrat', sans-serif; color: #26265a;
+    border: 2px dashed #8e93a0; border-radius: 6px; padding: 9px 14px; background: #ffffff;
+  }
+  .riveter small { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #6b7080; }
+  .mail-head .tag { font: 600 12px 'Montserrat', sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #3b3f4a; }
+  .mail-body { border: 1px solid #e3e5e9; border-top: 0; border-radius: 0 0 8px 8px; padding: 24px 22px 8px; }
+  .mail-body p { margin: 0 0 16px; }
+  .mail-body ul { margin: 0 0 18px; padding-left: 22px; }
+  .mail-body li { margin-bottom: 4px; }
+  .strong { font-weight: 600; line-height: 1.9; }
+  .note {
+    margin: 4px 0 20px; padding: 12px 14px; border-radius: 6px;
+    background: #fff7e0; border: 1px solid #f0d58a; color: #5b4a12; font-size: 14px;
+  }
+  .note b { color: #3f330c; }
+  .mail a { color: #26265a; text-decoration: underline; text-decoration-color: #7cc49a; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .support {
+    margin-top: 28px; padding-top: 22px; border-top: 1px solid #e3e5e9;
+    display: grid; justify-items: center; gap: 8px; text-align: center; font-size: 12px; color: #666;
+  }
+  .support .label { font: 600 10.5px 'Montserrat', sans-serif; letter-spacing: 1.5px; text-transform: uppercase; color: #8a8f9c; }
+  .support img { width: 104px; height: auto; }
+  .legal { font-size: 10.5px; font-style: italic; color: #777; margin-top: 18px; text-align: left; }
+
+  @media (max-width: 600px) {
+    .client { margin: 0; border-radius: 0; border-left: 0; border-right: 0; }
+    .subject { font-size: 17px; padding: 14px 16px 6px; }
+    .meta, .attachments { padding-left: 16px; padding-right: 16px; }
+    .actions { display: none; }
+    .mail { padding: 20px 16px 32px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+  <div class="banner">
+    <span>Email mockup: this message is sent to the agent by email and does not display in the application UI.</span>
+    <a href="contractor-gl.html#thanks">← Back to Thank you page</a>
+  </div>
+
+  <div class="client">
+    <div class="subject">Your Riveter submission QMGL0416403 is approved – Claims-Made General Liability</div>
+    <div class="meta">
+      <div class="avatar" aria-hidden="true">R</div>
+      <div class="from">
+        <div><strong>Riveter Contractor GL</strong> <span class="addr">via btis Marketplace</span></div>
+        <div class="to">To: Morgan, Alex (sample agent)</div>
+      </div>
+      <div class="actions" aria-hidden="true"><span>↩ Reply</span><span>↩ Reply All</span><span>→ Forward</span></div>
+      <div class="date">Tue 11/17/2026 9:09 AM</div>
+    </div>
+    <div class="attachments">
+      <div class="file"><span class="pdf">PDF</span>Riveter_ClaimsMade_Proposal.pdf <span class="size">7 KB</span></div>
+      <div class="file"><span class="pdf">PDF</span>Riveter_Application.pdf <span class="size">825 KB</span></div>
+    </div>
+
+    <div class="mail">
+      <div class="mail-head">
+        <span class="riveter">Riveter<small>Claims-Made</small></span>
+        <span class="tag">General Liability Proposal</span>
+      </div>
+      <div class="mail-body">
+        <p>Hello Alex,</p>
+        <p>Please review the attached Riveter Claims-Made General Liability proposal and application for <strong>Ellis Carpentry</strong>. Annual premium: <strong>$799</strong> (1M/2M/2M limits, $1,000 deductible).</p>
+        <p class="strong">At binding, please provide:</p>
+        <ul>
+          <li>Signed Riveter Application, including TRIA form and fraud statement <em>(see attached full application)</em></li>
+          <li>Signed Diligent Search form(s) <em>(see attached)</em></li>
+          <li>Retroactive date confirmation and any prior claims-made policy details</li>
+          <li>Esign certificate is required if forms are electronically signed.</li>
+        </ul>
+        <div class="note"><b>Claims-Made policy:</b> covers claims made and reported while the policy is active, for work after the retroactive date. Tail coverage (extended reporting period) may be needed if the policy ends.</div>
+        <p class="strong">IMPORTANT NOTE: All required items must be received to bind. We CANNOT backdate coverage. These terms are subject to review and acceptance of the information requested. Quote valid for 30 days.</p>
+        <p class="strong">Agency Bill only. Invoice will be emailed to your agency within 72 hours of binding. Premium financing is available through any third-party premium finance company of your client's choosing.</p>
+        <p>If you would like to bind, please email all required documents to <a href="mailto:bindrequest@btisinc.com">bindrequest@btisinc.com</a>.</p>
+        <p>If you have any questions or need to make updates, please email <a href="mailto:contractorsubs@btisinc.com">contractorsubs@btisinc.com</a>.</p>
+        <p>Call our office with any questions at 877-649-6682 or chat with us at <a href="https://www.btisinc.com" target="_blank" rel="noopener">www.btisinc.com</a></p>
+
+        <div class="support">
+          <span class="label">Supported by</span>
+          <img src="logos/btis-dark.svg" alt="btis">
+          <div>6610 Sierra College Blvd. | Rocklin, CA 95677</div>
+          <div>877.649.6682 Phone | <a href="https://www.btisinc.com" target="_blank" rel="noopener">www.btisinc.com</a></div>
+        </div>
+        <p class="legal">Mockup for design review. Names, submission details and attachments are samples; nothing here is a real policy or quote.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

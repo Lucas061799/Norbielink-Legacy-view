@@ -36,6 +36,7 @@
   }
   .sidebar > :not(.back-link) { position: relative; z-index: 1; }
   .back-link { z-index: 1; }
+  body.on-thanks .sidebar > :not(.back-link) { display: none; }
   .back-link {
     position: absolute; top: 32px; left: 36px;
     font-size: 12px; font-weight: 600; color: #3f5a46; text-decoration: none;
@@ -61,7 +62,8 @@
   }
   .brand img { width: 118px; height: auto; }
 
-  .quotes { display: flex; gap: 14px; align-items: stretch; justify-content: center; flex-wrap: wrap; }
+  .quote-wrap { width: fit-content; max-width: 100%; }
+  .quotes { display: flex; gap: 14px; align-items: stretch; justify-content: flex-start; flex-wrap: wrap; }
   .card-group {
     display: flex; flex-direction: column; gap: 10px;
     border: 2px solid #7cc49a; border-radius: 10px; padding: 0 10px 12px;
@@ -71,7 +73,7 @@
   .card-group.occurrence .group-label { background: transparent; color: #3f5a46; }
   .card-group.claims { background: linear-gradient(180deg, #d6d9de 0%, #bfc3ca 55%, #a7acb6 100%); background-origin: border-box; }
   .card-group.claims .group-label { background: transparent; color: #4a4f5a; }
-  .group-cards { display: flex; gap: 14px; align-items: stretch; flex-wrap: wrap; justify-content: center; flex: 1; }
+  .group-cards { display: flex; gap: 14px; align-items: stretch; flex-wrap: wrap; justify-content: flex-start; flex: 1; }
   .group-label {
     height: 28px; display: flex; align-items: center; justify-content: center;
     font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #26265a;
@@ -203,7 +205,7 @@
   .switch input:focus-visible + .track { outline: 2px solid #3b9457; outline-offset: 2px; }
   .nav { display: flex; justify-content: space-between; margin-top: 40px; }
   .nav .spacer { flex: 1; }
-  .quote-nav { max-width: 1110px; margin: 40px auto 0; }
+  .quote-nav { margin-top: 40px; padding-right: 124px; }
   .btn {
     border: 0; border-radius: 8px; padding: 10px 16px; cursor: pointer;
     font: 600 13px 'Montserrat', sans-serif; letter-spacing: 1.5px;
@@ -237,13 +239,18 @@
   .thanks h1 { font-size: 46px; font-weight: 500; margin: 0 0 40px; color: #1f1f2b; }
   .thanks p { font-size: 19px; line-height: 1.7; margin: 0 0 44px; color: #2b2b3a; }
   .thanks strong { font-weight: 600; }
-  .thanks a { color: #8fcdb4; text-decoration: none; }
-  .thanks a:hover { text-decoration: underline; }
+  .thanks a:not(.btn-return) {
+    color: #26265a; font-weight: 500; text-decoration: underline;
+    text-decoration-color: #7cc49a; text-decoration-thickness: 2px; text-underline-offset: 4px;
+  }
+  .thanks a:not(.btn-return):hover { color: #3a3380; text-decoration-color: #4fae6b; }
   .btn-return {
     display: inline-block; border-radius: 12px; padding: 14px 22px;
     background: linear-gradient(180deg, #a6dcb4, #86c99a); color: #ffffff !important;
     font-size: 17px; font-weight: 500; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    text-decoration: none;
   }
+  .thanks p.email-note { font-size: 13px; color: #6a6a8a; margin: 18px 0 0; line-height: 1.5; }
   .btn-return:hover { text-decoration: none !important; filter: brightness(1.04); }
 
   @media (max-width: 1100px) {
@@ -264,9 +271,9 @@
     .main { padding-left: 24px; padding-right: 24px; }
   }
   /* Large monitors: scale the whole layout up so cards and text grow together */
-  @media (min-width: 1800px) { body { zoom: 1.2; } }
-  @media (min-width: 2300px) { body { zoom: 1.45; } }
-  @media (min-width: 3200px) { body { zoom: 1.9; } }
+  @media (min-width: 1800px) { body { zoom: 1.2; min-height: calc(100vh / 1.2); } }
+  @media (min-width: 2300px) { body { zoom: 1.45; min-height: calc(100vh / 1.45); } }
+  @media (min-width: 3200px) { body { zoom: 1.9; min-height: calc(100vh / 1.9); } }
 
   @media (max-width: 900px) {
     body { flex-direction: column; }
@@ -417,6 +424,7 @@
 
     <!-- Step 4: Price Indication (100%) -->
     <section class="screen padded" data-screen="quote" data-stage="price" data-progress="100" hidden>
+    <div class="quote-wrap">
     <div class="quotes">
       <div class="card-group occurrence">
         <div class="group-label">Occurrence</div>
@@ -502,12 +510,13 @@
       </div>
 
       <label class="compare">
-        <input type="checkbox" id="compare" checked>
+        <input type="checkbox" id="compare">
         <span class="tick">✔</span>
         Compare Carriers
       </label>
     </div>
       <div class="nav quote-nav"><button class="btn btn-back" type="button" data-go="operations">BACK</button><button class="btn btn-next" type="button" data-go="thanks">NEXT</button></div>
+    </div>
     </section>
 
     <!-- Confirmation -->
@@ -517,6 +526,7 @@
         <p>We received your GL application <strong>QMGL0416403</strong>, and it is under review.</p>
         <p>If you have any questions, feel free to call us at <a href="tel:+18776496682">877.649.6682</a> or chat with us at <a href="https://my.btisinc.com" target="_blank" rel="noopener">my.btisinc.com</a></p>
         <a class="btn-return" href="index.html">return to marketplace</a>
+        <p class="email-note"><a href="email-mockup.html">View email here</a> – will not display in UI</p>
       </div>
     </section>
   </main>
@@ -536,6 +546,7 @@
     function show(name) {
       const screen = screens.find((s) => s.dataset.screen === name) || screens[0];
       screens.forEach((s) => { s.hidden = s !== screen; });
+      document.body.classList.toggle('on-thanks', screen.dataset.screen === 'thanks');
       document.getElementById('progressFill').style.width = screen.dataset.progress + '%';
       document.getElementById('progressPct').textContent = screen.dataset.progress + '%';
       document.querySelectorAll('.steps li').forEach((li) => li.classList.toggle('current', li.dataset.stage === screen.dataset.stage));
