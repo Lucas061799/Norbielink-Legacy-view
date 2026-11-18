@@ -37,6 +37,11 @@
   .sidebar > :not(.back-link) { position: relative; z-index: 1; }
   .back-link { z-index: 1; }
   body.on-thanks .sidebar > :not(.back-link) { display: none; }
+  .side-divider { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.55); margin: 26px 0 18px; }
+  .side-links { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .side-links a { font-size: 13px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.3px; }
+  .side-links a:hover { text-decoration: underline; }
+  .side-links a:focus-visible { outline: 2px solid #26265a; outline-offset: 2px; }
   .layout-options { list-style: none; padding: 0; margin: 10px 0 0 2px; display: none; gap: 6px; }
   body.on-quote .layout-options { display: grid; }
   .layout-options button {
@@ -329,6 +334,11 @@
           <li><button type="button" data-layout="mixed">Option 03</button></li>
         </ul>
       </li>
+    </ul>
+    <hr class="side-divider">
+    <ul class="side-links" aria-label="Jump to">
+      <li><a href="#thanks">Thank you page</a></li>
+      <li><a href="email-mockup.html">Email letter</a></li>
     </ul>
   </aside>
 
