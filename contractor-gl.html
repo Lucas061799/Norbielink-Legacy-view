@@ -286,6 +286,35 @@
     font: 600 10.5px 'Montserrat', sans-serif; letter-spacing: 1px; cursor: not-allowed;
   }
 
+  /* Riveter acknowledgement popup */
+  .agree-backdrop {
+    position: fixed; inset: 0; z-index: 1000; background: rgba(20, 20, 40, 0.45);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .agree-backdrop[hidden] { display: none; }
+  .agree-modal {
+    position: relative; width: 520px; max-width: 100%; max-height: calc(100vh - 40px); overflow-y: auto;
+    background: #ffffff; border-radius: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    padding: 28px 28px 24px;
+  }
+  .agree-modal .wordmark.placeholder { font-size: 20px; padding: 8px 12px; }
+  .agree-modal h2 { margin: 18px 0 10px; font-size: 20px; font-weight: 600; color: #26265a; }
+  .agree-body {
+    font-size: 13px; line-height: 1.6; color: #444; background: #f6f7f9; border: 1px solid #e6e8ec;
+    border-radius: 8px; padding: 12px 14px; max-height: 220px; overflow-y: auto;
+  }
+  .agree-body p { margin: 0 0 10px; }
+  .agree-body p:last-child { margin-bottom: 0; }
+  .agree-check { margin-top: 18px; font-size: 13px; color: #2b2b3a; font-weight: 500; }
+  .agree-actions { display: flex; justify-content: space-between; margin-top: 24px; }
+  .btn-next:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+  .agree-close {
+    position: absolute; top: 12px; right: 14px; border: 0; background: none; cursor: pointer;
+    font-size: 24px; line-height: 1; color: #8a8f9c; padding: 4px;
+  }
+  .agree-close:hover { color: #26265a; }
+  .agree-close:focus-visible { outline: 2px solid #3b9457; outline-offset: 2px; }
+
   /* Thank you */
   .thanks { max-width: 720px; padding-top: 20px; }
   .thanks h1 { font-size: 46px; font-weight: 500; margin: 0 0 40px; color: #1f1f2b; }
@@ -549,11 +578,11 @@
         <div class="group-label">Claims-Made</div>
         <div class="group-cards">
       <!-- Placeholder carrier: replace name, price and features when available -->
-      <section class="card">
+      <section class="card" data-carrier="riveter">
         <div class="card-logo"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span></div>
         <div class="field"><label>Limits:</label><select><option>1M/2M/2M</option><option>1M/1M/1M</option><option>500K/1M/1M</option></select></div>
         <div class="field"><label>Deductible:</label><select><option>$1,000</option><option>$2,500</option><option>$5,000</option></select></div>
-        <div class="market">Claims-Made</div>
+        <div class="market">Non-Admitted Claims-Made</div>
         <div class="price-row"><div><div class="price">$799</div><div class="per">annually</div></div><button class="select-btn">SELECT</button></div>
         <hr>
         <ul class="features">
@@ -582,6 +611,25 @@
     </div>
     </section>
 
+    <!-- Riveter acknowledgement popup (opened by Riveter's SELECT) -->
+    <div class="agree-backdrop" id="agreeModal" hidden>
+      <div class="agree-modal" role="dialog" aria-modal="true" aria-labelledby="agreeTitle">
+        <button type="button" class="agree-close" aria-label="Close" data-close>×</button>
+        <span class="wordmark placeholder">Riveter<small>Claims-Made</small></span>
+        <h2 id="agreeTitle">Before you continue</h2>
+        <div class="agree-body">
+          <p>[Placeholder] This quote is for a <strong>claims-made</strong> General Liability policy. Coverage applies only to claims first made and reported during the policy period, for work performed after the retroactive date.</p>
+          <p>[Placeholder] If this policy is cancelled or not renewed, an extended reporting period (tail coverage) may be needed to report later claims. Terms, conditions and pricing are subject to underwriting review.</p>
+          <p>[Placeholder] Confirm that you have reviewed these terms with your client before binding.</p>
+        </div>
+        <label class="check agree-check"><input type="checkbox" id="agreeBox"><span class="box">✔</span>I have read and agree to the terms above</label>
+        <div class="agree-actions">
+          <button type="button" class="btn btn-back" data-close>CANCEL</button>
+          <button type="button" class="btn btn-next" id="agreeContinue" disabled>CONTINUE</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Confirmation -->
     <section class="screen padded" data-screen="thanks" data-stage="done" data-progress="100" hidden>
       <div class="thanks">
@@ -595,13 +643,40 @@
   </main>
 
   <script>
+    function selectCard(card) {
+      document.querySelectorAll('.card').forEach((c) => c.classList.remove('selected'));
+      card.classList.add('selected');
+      setTimeout(() => go('thanks'), 350);
+    }
     document.querySelectorAll('.select-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.card').forEach((c) => c.classList.remove('selected'));
-        btn.closest('.card').classList.add('selected');
-        setTimeout(() => go('thanks'), 350);
+        const card = btn.closest('.card');
+        // Riveter (claims-made) asks the agent to acknowledge terms before continuing
+        if (card.dataset.carrier === 'riveter') openAgree(card, btn);
+        else selectCard(card);
       });
     });
+
+    // Riveter acknowledgement popup
+    const agreeModal = document.getElementById('agreeModal');
+    const agreeBox = document.getElementById('agreeBox');
+    const agreeContinue = document.getElementById('agreeContinue');
+    let agreeCard = null, agreeReturnFocus = null;
+    function openAgree(card, opener) {
+      agreeCard = card; agreeReturnFocus = opener;
+      agreeBox.checked = false; agreeContinue.disabled = true;
+      agreeModal.hidden = false;
+      agreeBox.focus();
+    }
+    function closeAgree() {
+      agreeModal.hidden = true;
+      if (agreeReturnFocus) agreeReturnFocus.focus();
+    }
+    agreeBox.addEventListener('change', () => { agreeContinue.disabled = !agreeBox.checked; });
+    agreeContinue.addEventListener('click', () => { agreeModal.hidden = true; selectCard(agreeCard); });
+    agreeModal.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', closeAgree));
+    agreeModal.addEventListener('click', (e) => { if (e.target === agreeModal) closeAgree(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !agreeModal.hidden) closeAgree(); });
 
     function setLayout(name) {
       document.body.classList.toggle('plain-groups', name === 'plain');
