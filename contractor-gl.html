@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contractor General Liability – Price Indication</title>
+<title>Contractor General Liability</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
@@ -28,11 +28,14 @@
   .sidebar::after {
     content: "";
     position: absolute;
-    left: 30px; bottom: 10px;
-    width: 200px; height: 200px;
-    border: 26px solid rgba(255, 255, 255, 0.18);
-    border-radius: 50%;
+    left: -6px; bottom: -14px;
+    width: 230px; height: 325px;
+    background: url("logos/btis-b.svg") no-repeat left bottom / contain;
+    opacity: 0.32;
+    pointer-events: none;
   }
+  .sidebar > :not(.back-link) { position: relative; z-index: 1; }
+  .back-link { z-index: 1; }
   .back-link {
     position: absolute; top: 32px; left: 36px;
     font-size: 12px; font-weight: 600; color: #3f5a46; text-decoration: none;
@@ -42,21 +45,21 @@
   .sub-number { font-size: 17px; font-weight: 500; color: #3f5a46; margin-top: 2px; letter-spacing: 0.5px; }
   .progress { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
   .progress-track { flex: 1; height: 10px; background: rgba(255,255,255,0.4); }
-  .progress-fill { height: 100%; width: 100%; background: #f1e27a; }
+  .progress-fill { height: 100%; width: 25%; background: #f1e27a; transition: width .3s ease; }
   .progress-pct { font-size: 12px; color: #ffffff; }
   .steps { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 18px; }
   .steps li { font-size: 15px; font-weight: 500; color: #ffffff; letter-spacing: 0.3px; }
   .steps li.current { color: #26265a; font-weight: 600; }
 
   /* Main */
-  .main { flex: 1; position: relative; padding: 144px 40px 60px; min-width: 0; }
+  .main { flex: 1; position: relative; padding: 144px 0 60px 40px; min-width: 0; }
+  .screen.padded { padding-right: 40px; }
   .brand {
     position: absolute; top: 0; right: 60px;
     background: #26205e; width: 204px; height: 117px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    display: flex; align-items: center; justify-content: center;
   }
-  .brand img { width: 120px; filter: brightness(0) invert(1); }
-  .brand span { color: #ffffff; font-size: 14px; font-weight: 500; letter-spacing: 1px; }
+  .brand img { width: 118px; height: auto; }
 
   .quotes { display: flex; gap: 14px; align-items: stretch; justify-content: center; flex-wrap: wrap; }
   .card-group {
@@ -102,7 +105,7 @@
   }
   .field select {
     width: 100%; border: 0; background: transparent; font: 500 13px 'Montserrat', sans-serif; color: #2b2b3a;
-    padding: 12px 10px; appearance: none; cursor: pointer;
+    padding: 12px 30px 12px 10px; appearance: none; cursor: pointer; text-overflow: ellipsis;
     background-image: linear-gradient(45deg, transparent 50%, #555 50%), linear-gradient(135deg, #555 50%, transparent 50%);
     background-position: calc(100% - 16px) 50%, calc(100% - 12px) 50%;
     background-size: 4px 4px; background-repeat: no-repeat;
@@ -123,6 +126,7 @@
   .card.selected .select-btn { background: linear-gradient(180deg, #4fae6b, #3b9457); }
   hr { border: 0; border-top: 1px solid #ececec; margin: 24px 0 18px; }
 
+  body.hide-compare .features, body.hide-compare .card hr { display: none; }
   .features { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
   .features li { display: grid; grid-template-columns: 18px 1fr; gap: 6px; font-size: 11.5px; color: #6a6a8a; line-height: 1.2; }
   .features li::before { content: "✔"; color: #8fd07a; font-size: 14px; line-height: 1; }
@@ -144,6 +148,126 @@
   .compare input:checked + .tick { background: #8fd07a; color: #ffffff; }
   .compare input:focus-visible + .tick { outline: 2px solid #3b9457; outline-offset: 2px; }
 
+  /* Flow: one screen visible at a time */
+  .screen[hidden] { display: none !important; }
+  .flow-layout { display: grid; grid-template-columns: minmax(0, 652px) 330px; justify-content: space-between; gap: 32px; align-items: start; }
+
+  /* Form screens */
+  .form { display: grid; gap: 22px; }
+  .row { display: flex; gap: 12px; }
+  .row > * { flex: 1; min-width: 0; }
+  .row > .grow-2 { flex: 2; }
+  .form .field { margin-top: 0; background: #ffffff; }
+  .field input, .field textarea {
+    width: 100%; border: 0; background: transparent; font: 500 13px 'Montserrat', sans-serif; color: #2b2b3a;
+    padding: 12px 10px;
+  }
+  .field textarea { resize: vertical; min-height: 58px; }
+  .field input:focus, .field textarea:focus { outline: none; }
+  .field.disabled { background: #f4f4f6; }
+  .field.disabled input { color: #9a9aac; }
+  .field .icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #8fd07a; font-size: 14px; line-height: 0; pointer-events: none; }
+  .field.has-icon input, .field.has-icon select { padding-right: 34px; }
+  .field .icon.info, .info-inline {
+    width: 16px; height: 16px; border-radius: 50%; background: #8fd07a; color: #ffffff;
+    font: 700 10px/16px 'Montserrat', sans-serif; text-align: center; font-style: normal;
+  }
+  .info-inline { display: inline-block; vertical-align: 1px; margin-left: 2px; }
+  .help { font-size: 10px; color: #4a6fa5; margin: -16px 0 0 12px; }
+  .req { color: #555; }
+  .check { display: flex; align-items: center; gap: 12px; font-size: 12px; color: #444; cursor: pointer; width: fit-content; }
+  .check input { position: absolute; opacity: 0; pointer-events: none; }
+  .check .box {
+    width: 22px; height: 22px; border: 2px solid #e2e2e8; border-radius: 4px; background: #ffffff;
+    display: flex; align-items: center; justify-content: center; color: transparent; font-size: 16px;
+  }
+  .check input:checked + .box { color: #8fd07a; border-color: #cfe7c4; }
+  .check input:focus-visible + .box { outline: 2px solid #3b9457; outline-offset: 2px; }
+  .section-head { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-top: 8px; }
+  .class-row { display: flex; gap: 12px; align-items: center; }
+  .class-row .field:first-child { flex: 1; min-width: 0; }
+  .class-row .field.pct { width: 100px; flex: none; }
+  .field.pct input { text-align: right; padding-right: 26px; }
+  .field.pct::after { content: "%"; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 11px; color: #9a9aac; }
+  .icon-btn { border: 0; background: none; color: #8fd07a; font-size: 22px; line-height: 1; cursor: pointer; width: 22px; padding: 0; }
+  .icon-btn:disabled { visibility: hidden; }
+  .total-row { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-right: 34px; font-size: 13px; font-weight: 600; }
+  .total-row .field { width: 100px; }
+  .question { display: flex; justify-content: space-between; align-items: center; gap: 24px; font-size: 12.5px; font-weight: 600; line-height: 1.6; }
+  .switch { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: #444; cursor: pointer; flex-shrink: 0; }
+  .switch input { position: absolute; opacity: 0; pointer-events: none; }
+  .switch .track { width: 38px; height: 20px; border-radius: 10px; background: #e2e2e8; position: relative; transition: background .15s; }
+  .switch .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .15s; }
+  .switch input:checked + .track { background: #8fd07a; }
+  .switch input:checked + .track::after { transform: translateX(18px); }
+  .switch input:focus-visible + .track { outline: 2px solid #3b9457; outline-offset: 2px; }
+  .nav { display: flex; justify-content: space-between; margin-top: 40px; }
+  .nav .spacer { flex: 1; }
+  .quote-nav { max-width: 1110px; margin: 40px auto 0; }
+  .btn {
+    border: 0; border-radius: 8px; padding: 10px 16px; cursor: pointer;
+    font: 600 13px 'Montserrat', sans-serif; letter-spacing: 1.5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  }
+  .btn-back { background: #ffffff; color: #2b2b3a; }
+  .btn-next { background: linear-gradient(180deg, #a6dcb4, #86c99a); color: #ffffff; }
+  .btn:focus-visible, .select-btn:focus-visible { outline: 2px solid #3b9457; outline-offset: 2px; }
+
+  /* Quote in Progress panel */
+  .progress-panel {
+    background: #ffffff; border-radius: 6px 0 0 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 32px 40px 34px 52px; display: grid; gap: 22px;
+  }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .panel-head .toolbox { width: 96px; height: auto; flex-shrink: 0; }
+  .panel-head h2 { margin: 0; font-size: 19px; font-weight: 500; color: #26265a; line-height: 1.35; }
+  .quote-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .quote-line .wordmark { font-size: 17px; }
+  .quote-line .wordmark.veta { letter-spacing: 5px; }
+  .quote-line .wordmark.placeholder { font-size: 14px; padding: 5px 8px; }
+  .quote-line .wordmark.placeholder small { font-size: 7px; }
+  .quote-line .amount { font-size: 24px; font-weight: 500; color: #26265a; }
+  .refresh {
+    justify-self: center; border: 0; border-radius: 8px; padding: 7px 14px; background: #ececef; color: #b4b4c0;
+    font: 600 10.5px 'Montserrat', sans-serif; letter-spacing: 1px; cursor: not-allowed;
+  }
+
+  /* Thank you */
+  .thanks { max-width: 720px; padding-top: 20px; }
+  .thanks h1 { font-size: 46px; font-weight: 500; margin: 0 0 40px; color: #1f1f2b; }
+  .thanks p { font-size: 19px; line-height: 1.7; margin: 0 0 44px; color: #2b2b3a; }
+  .thanks strong { font-weight: 600; }
+  .thanks a { color: #8fcdb4; text-decoration: none; }
+  .thanks a:hover { text-decoration: underline; }
+  .btn-return {
+    display: inline-block; border-radius: 12px; padding: 14px 22px;
+    background: linear-gradient(180deg, #a6dcb4, #86c99a); color: #ffffff !important;
+    font-size: 17px; font-weight: 500; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  }
+  .btn-return:hover { text-decoration: none !important; filter: brightness(1.04); }
+
+  @media (max-width: 1100px) {
+    .flow-layout { grid-template-columns: minmax(0, 1fr); }
+    .progress-panel { border-radius: 6px; max-width: 420px; }
+  }
+  @media (max-width: 600px) {
+    .row { flex-direction: column; }
+    .question { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .thanks h1 { font-size: 36px; }
+    .thanks p { font-size: 16px; }
+  }
+
+  /* Laptops: tighten the sidebar and gutters so both quote groups stay on one row */
+  @media (min-width: 901px) and (max-width: 1440px) {
+    .sidebar { width: 260px; padding-left: 28px; padding-right: 28px; }
+    .back-link { left: 28px; }
+    .main { padding-left: 24px; padding-right: 24px; }
+  }
+  /* Large monitors: scale the whole layout up so cards and text grow together */
+  @media (min-width: 1800px) { body { zoom: 1.2; } }
+  @media (min-width: 2300px) { body { zoom: 1.45; } }
+  @media (min-width: 3200px) { body { zoom: 1.9; } }
+
   @media (max-width: 900px) {
     body { flex-direction: column; }
     .sidebar { width: 100%; padding: 60px 24px 24px; }
@@ -155,26 +279,144 @@
 </head>
 <body>
   <aside class="sidebar">
-    <a class="back-link" href="index.html">← Back to submissions</a>
+    <a class="back-link" href="index.html">← Back to marketplace</a>
     <div class="sub-label">Submission Number</div>
     <div class="sub-number">QMGL0416403</div>
     <div class="progress">
-      <div class="progress-track"><div class="progress-fill"></div></div>
-      <span class="progress-pct">100%</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-pct" id="progressPct">25%</span>
     </div>
     <ul class="steps">
-      <li>Applicant Information</li>
-      <li>Business Operations</li>
-      <li class="current">Price Indication</li>
+      <li data-stage="applicant">Applicant Information</li>
+      <li data-stage="operations">Business Operations</li>
+      <li data-stage="price">Price Indication</li>
     </ul>
   </aside>
 
   <main class="main">
     <div class="brand">
-      <img src="logos/btis.png" alt="btis">
-      <span>MARKETPLACE</span>
+      <img src="logos/btis-marketplace.svg" alt="btis Marketplace">
     </div>
 
+    <!-- Step 1: Applicant Information (25%) -->
+    <section class="screen" data-screen="applicant" data-stage="applicant" data-progress="25">
+      <div class="flow-layout">
+        <form class="form" data-next="business">
+          <div class="row">
+            <div class="field"><label for="exp">Years of Experience<span class="req">*</span></label>
+              <select id="exp" required><option>Less than 1 year</option><option>1-2 years</option><option>3-5 years</option><option>6-10 years</option><option>11-18 years</option><option selected>19+ years</option></select></div>
+            <div class="field"><label for="yib">Years in Business<span class="req">*</span></label>
+              <select id="yib" required><option>New venture</option><option>1-2 years in business</option><option>3-5 years in business</option><option>6-14 years in business</option><option selected>15+ years in business</option></select></div>
+            <div class="field"><label for="prior">Prior Insurance History<span class="req">*</span></label>
+              <select id="prior" required><option>No prior coverage</option><option>Less than 1 year of coverage</option><option>1-3 years of coverage</option><option selected>4+ years of coverage, no lapse</option></select></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="first">Applicant First Name<span class="req">*</span></label><input id="first" required value="Jordan"></div>
+            <div class="field"><label for="middle">Middle Name</label><input id="middle"></div>
+            <div class="field"><label for="last">Last Name<span class="req">*</span></label><input id="last" required value="Ellis"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="phone">Phone<span class="req">*</span></label><input id="phone" type="tel" required value="(555) 014-2290"></div>
+            <div class="field"><label for="mobile">Mobile</label><input id="mobile" type="tel"></div>
+          </div>
+          <div class="field has-icon"><label for="email">Email<span class="req">*</span></label><input id="email" type="email" required value="jordan.ellis@example.com"><span class="icon">●</span></div>
+          <div class="field" style="margin-top:14px"><label for="website">Website Address</label><input id="website" type="url" placeholder="https://"></div>
+          <div class="help">Example: https://example.com</div>
+          <label class="check"><input type="checkbox" id="spanish"><span class="box">✔</span>Spanish speaking inspection required</label>
+          <div class="nav"><span class="spacer"></span><button class="btn btn-next" type="submit">NEXT</button></div>
+        </form>
+        <aside class="progress-panel" aria-label="Quote in progress">
+          <div class="panel-head">
+            <h2>Quote in<br>Progress…</h2>
+            <img class="toolbox" src="logos/toolbox.png" alt="" width="96" height="88">
+          </div>
+          <div class="quote-line"><span class="wordmark best">best choice</span><span class="amount">$842</span></div>
+          <div class="quote-line"><span class="wordmark veta">VETA</span><span class="amount">$1,241</span></div>
+          <div class="quote-line"><span class="wordmark brivado">BRIVADO</span><span class="amount">$889</span></div>
+          <div class="quote-line"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><span class="amount">$799</span></div>
+          <button class="refresh" type="button" disabled>Refresh My Quote ⟳</button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Step 2: Applicant Information, business details (50%) -->
+    <section class="screen" data-screen="business" data-stage="applicant" data-progress="50" hidden>
+      <div class="flow-layout">
+        <form class="form" data-next="operations" data-back="applicant">
+          <div class="row">
+            <div class="field has-icon grow-2"><label for="license">Contractors License or App. Fee Number</label><input id="license" value="ABC 123"><span class="icon"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="M11 11l4 4" stroke-linecap="round"/></svg></span></div>
+            <div class="field"><label for="effective">Effective Date<span class="req">*</span></label><input id="effective" type="date" required value="2026-11-17"></div>
+          </div>
+          <div class="field"><label for="dba">DBA<span class="req">*</span></label><input id="dba" required value="Ellis Carpentry"></div>
+          <div class="row">
+            <div class="field disabled"><label for="legal">Legal Business Name<span class="req">*</span></label><input id="legal" disabled></div>
+            <div class="field"><label for="entity">Entity Type<span class="req">*</span></label>
+              <select id="entity" required><option selected>Sole Proprietor or Individual</option><option>Partnership</option><option>LLC</option><option>Corporation</option></select></div>
+          </div>
+          <div class="help">Legal Business Name must be the same as the insured's name</div>
+          <div class="field"><label for="street">Business Street Address<span class="req">*</span></label><input id="street" required value="1200 Sample Ridge Court"></div>
+          <div class="row">
+            <div class="field"><label for="city">City<span class="req">*</span></label><input id="city" required value="Rocklin"></div>
+            <div class="field"><label for="state">State/Province<span class="req">*</span></label>
+              <select id="state" required><option>AZ</option><option selected>CA</option><option>NV</option><option>OR</option><option>TX</option><option>WA</option></select></div>
+            <div class="field"><label for="zip">Postal Code<span class="req">*</span></label><input id="zip" required inputmode="numeric" value="95765"></div>
+          </div>
+          <label class="check"><input type="checkbox" id="mailing" checked><span class="box">✔</span>Mailing is the same as business</label>
+          <div class="section-head"><span>Classification - add up to 4</span><span style="width:134px">% of Work</span></div>
+          <div id="classRows"></div>
+          <div class="total-row">Total:<div class="field disabled pct"><input id="pctTotal" disabled value="100"></div></div>
+          <div class="nav"><button class="btn btn-back" type="button" data-go="applicant">BACK</button><button class="btn btn-next" type="submit">NEXT</button></div>
+        </form>
+        <aside class="progress-panel" aria-label="Quote in progress">
+          <div class="panel-head">
+            <h2>Quote in<br>Progress…</h2>
+            <img class="toolbox" src="logos/toolbox.png" alt="" width="96" height="88">
+          </div>
+          <div class="quote-line"><span class="wordmark best">best choice</span><span class="amount">$842</span></div>
+          <div class="quote-line"><span class="wordmark veta">VETA</span><span class="amount">$1,241</span></div>
+          <div class="quote-line"><span class="wordmark brivado">BRIVADO</span><span class="amount">$889</span></div>
+          <div class="quote-line"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><span class="amount">$799</span></div>
+          <button class="refresh" type="button" disabled>Refresh My Quote ⟳</button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Step 3: Business Operations (75%) -->
+    <section class="screen" data-screen="operations" data-stage="operations" data-progress="75" hidden>
+      <div class="flow-layout">
+        <form class="form" data-next="quote" data-back="business">
+          <div class="row">
+            <div class="field has-icon"><label for="receipts">Annual Gross Receipts<span class="req">*</span></label><input id="receipts" required value="$ 150,000"><span class="icon info" title="More information">i</span></div>
+            <div class="field has-icon"><label for="payroll">Annual Employee Payroll<span class="req">*</span></label><input id="payroll" required value="$ 0"><span class="icon info" title="More information">i</span></div>
+          </div>
+          <div class="row">
+            <div class="field disabled" id="employeesField"><label for="employees"># of Employees<span class="req">*</span></label><input id="employees" type="number" min="0" disabled value="0"></div>
+            <div class="field has-icon"><label for="owners"># of Active Owners<span class="req">*</span></label><input id="owners" type="number" min="1" required value="1"><span class="icon info" title="More information">i</span></div>
+          </div>
+          <div class="field"><label for="ops">Description of Operations<span class="req">*</span></label>
+            <textarea id="ops" required>Residential remodeling carpentry: cabinets, trim, decks and framing repairs.</textarea></div>
+          <div class="question">Does the applicant hire subcontractors?
+            <label class="switch"><input type="checkbox" id="subs"><span class="track"></span><span class="switch-text">No</span></label></div>
+          <div class="question"><span>Does the applicant perform new residential work prior to Certificate of Occupancy? <span class="info-inline" title="More information">i</span></span>
+            <label class="switch"><input type="checkbox" id="newres"><span class="track"></span><span class="switch-text">No</span></label></div>
+          <div class="nav"><button class="btn btn-back" type="button" data-go="business">BACK</button><button class="btn btn-next" type="submit">NEXT</button></div>
+        </form>
+        <aside class="progress-panel" aria-label="Quote in progress">
+          <div class="panel-head">
+            <h2>Quote in<br>Progress…</h2>
+            <img class="toolbox" src="logos/toolbox.png" alt="" width="96" height="88">
+          </div>
+          <div class="quote-line"><span class="wordmark best">best choice</span><span class="amount">$842</span></div>
+          <div class="quote-line"><span class="wordmark veta">VETA</span><span class="amount">$1,241</span></div>
+          <div class="quote-line"><span class="wordmark brivado">BRIVADO</span><span class="amount">$889</span></div>
+          <div class="quote-line"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><span class="amount">$799</span></div>
+          <button class="refresh" type="button" disabled>Refresh My Quote ⟳</button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Step 4: Price Indication (100%) -->
+    <section class="screen padded" data-screen="quote" data-stage="price" data-progress="100" hidden>
     <div class="quotes">
       <div class="card-group occurrence">
         <div class="group-label">Occurrence</div>
@@ -260,11 +502,23 @@
       </div>
 
       <label class="compare">
-        <input type="checkbox" id="compare">
+        <input type="checkbox" id="compare" checked>
         <span class="tick">✔</span>
         Compare Carriers
       </label>
     </div>
+      <div class="nav quote-nav"><button class="btn btn-back" type="button" data-go="operations">BACK</button><button class="btn btn-next" type="button" data-go="thanks">NEXT</button></div>
+    </section>
+
+    <!-- Confirmation -->
+    <section class="screen padded" data-screen="thanks" data-stage="price" data-progress="100" hidden>
+      <div class="thanks">
+        <h1>Thank you!</h1>
+        <p>We received your GL application <strong>QMGL0416403</strong>, and it is under review.</p>
+        <p>If you have any questions, feel free to call us at <a href="tel:+18776496682">877.649.6682</a> or chat with us at <a href="https://my.btisinc.com" target="_blank" rel="noopener">my.btisinc.com</a></p>
+        <a class="btn-return" href="index.html">return to marketplace</a>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -272,8 +526,99 @@
       btn.addEventListener('click', () => {
         document.querySelectorAll('.card').forEach((c) => c.classList.remove('selected'));
         btn.closest('.card').classList.add('selected');
+        setTimeout(() => go('thanks'), 350);
       });
     });
+
+    // Screen flow: applicant -> business -> operations -> quote -> thanks, kept in the URL hash
+    const screens = [...document.querySelectorAll('.screen')];
+    const names = screens.map((s) => s.dataset.screen);
+    function show(name) {
+      const screen = screens.find((s) => s.dataset.screen === name) || screens[0];
+      screens.forEach((s) => { s.hidden = s !== screen; });
+      document.getElementById('progressFill').style.width = screen.dataset.progress + '%';
+      document.getElementById('progressPct').textContent = screen.dataset.progress + '%';
+      document.querySelectorAll('.steps li').forEach((li) => li.classList.toggle('current', li.dataset.stage === screen.dataset.stage));
+      window.scrollTo(0, 0);
+    }
+    function go(name) { if (location.hash !== '#' + name) location.hash = name; else show(name); }
+    window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+    show(names.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'applicant');
+
+    document.querySelectorAll('form[data-next]').forEach((form) => {
+      form.addEventListener('submit', (e) => { e.preventDefault(); if (form.reportValidity()) go(form.dataset.next); });
+    });
+    document.querySelectorAll('[data-go]').forEach((btn) => btn.addEventListener('click', () => go(btn.dataset.go)));
+
+    // Legal business name follows the applicant's name
+    const syncLegal = () => {
+      document.getElementById('legal').value = [first, middle, last].map((el) => el.value.trim()).filter(Boolean).join(' ');
+    };
+    const [first, middle, last] = ['first', 'middle', 'last'].map((id) => document.getElementById(id));
+    [first, middle, last].forEach((el) => el.addEventListener('input', syncLegal));
+    syncLegal();
+
+    // Classification rows: up to 4, percentages total to 100
+    const CLASS_CODES = [
+      'Carpentry Residential (Remodeling - Residential) [91340]',
+      'Carpentry - Interior Trim [91341]',
+      'Drywall Installation [92338]',
+      'Painting - Interior [98305]',
+      'Flooring Installation [94569]',
+      'Tile and Stone Work [99746]',
+    ];
+    const classRows = document.getElementById('classRows');
+    function addClassRow(code, pct) {
+      const row = document.createElement('div');
+      row.className = 'class-row';
+      row.style.marginTop = classRows.children.length ? '18px' : '0';
+      const idx = classRows.children.length + 1;
+      row.innerHTML = `
+        <div class="field"><label for="class${idx}">Class Code<span class="req">*</span></label>
+          <select id="class${idx}" required>${CLASS_CODES.map((c) => `<option${c === code ? ' selected' : ''}>${c}</option>`).join('')}</select></div>
+        <div class="field pct"><label for="pct${idx}">Percentage<span class="req">*</span></label>
+          <input id="pct${idx}" type="number" min="0" max="100" required value="${pct}"></div>
+        <button class="icon-btn" type="button" aria-label="Add a classification">+</button>`;
+      row.querySelector('input').addEventListener('input', syncTotal);
+      row.querySelector('.icon-btn').addEventListener('click', () => addClassRow(CLASS_CODES[classRows.children.length], 0));
+      classRows.appendChild(row);
+      // Only the last row shows "+", and only while fewer than 4 rows exist
+      [...classRows.children].forEach((r, i, all) => { r.querySelector('.icon-btn').disabled = i !== all.length - 1 || all.length >= 4; });
+      syncTotal();
+    }
+    function syncTotal() {
+      const total = [...classRows.querySelectorAll('input')].reduce((sum, el) => sum + (Number(el.value) || 0), 0);
+      document.getElementById('pctTotal').value = total;
+      const inputs = classRows.querySelectorAll('input');
+      inputs.forEach((el) => el.setCustomValidity(''));
+      if (total !== 100) inputs[inputs.length - 1].setCustomValidity('Percentages must add up to 100%.');
+    }
+    addClassRow(CLASS_CODES[0], 100);
+
+    // # of employees is only editable once there is payroll
+    const payroll = document.getElementById('payroll');
+    const employees = document.getElementById('employees');
+    const syncEmployees = () => {
+      const hasPayroll = Number(payroll.value.replace(/[^0-9.]/g, '')) > 0;
+      employees.disabled = !hasPayroll;
+      employees.required = hasPayroll;
+      document.getElementById('employeesField').classList.toggle('disabled', !hasPayroll);
+      if (!hasPayroll) employees.value = 0;
+    };
+    payroll.addEventListener('input', syncEmployees);
+    syncEmployees();
+
+    // Yes/No switches
+    document.querySelectorAll('.switch input').forEach((input) => {
+      const text = input.parentElement.querySelector('.switch-text');
+      input.addEventListener('change', () => { text.textContent = input.checked ? 'Yes' : 'No'; });
+    });
+
+    // Compare Carriers shows or hides each card's coverage checklist
+    const compare = document.getElementById('compare');
+    const syncCompare = () => document.body.classList.toggle('hide-compare', !compare.checked);
+    compare.addEventListener('change', syncCompare);
+    syncCompare();
   </script>
 </body>
 </html>
