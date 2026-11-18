@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contractor General Liability – Price Indication</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: #2b2b3a;
+    background: #fafafa;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 314px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, #bcd9a0 0%, #a6d1a6 55%, #8fcdb4 100%);
+    padding: 140px 36px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sidebar::after {
+    content: "";
+    position: absolute;
+    left: 30px; bottom: 10px;
+    width: 200px; height: 200px;
+    border: 26px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+  }
+  .back-link {
+    position: absolute; top: 32px; left: 36px;
+    font-size: 12px; font-weight: 600; color: #3f5a46; text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
+  .sub-label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; color: #ffffff; text-transform: uppercase; }
+  .sub-number { font-size: 17px; font-weight: 500; color: #3f5a46; margin-top: 2px; letter-spacing: 0.5px; }
+  .progress { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+  .progress-track { flex: 1; height: 10px; background: rgba(255,255,255,0.4); }
+  .progress-fill { height: 100%; width: 100%; background: #f1e27a; }
+  .progress-pct { font-size: 12px; color: #ffffff; }
+  .steps { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 18px; }
+  .steps li { font-size: 15px; font-weight: 500; color: #ffffff; letter-spacing: 0.3px; }
+  .steps li.current { color: #26265a; font-weight: 600; }
+
+  /* Main */
+  .main { flex: 1; position: relative; padding: 144px 40px 60px; min-width: 0; }
+  .brand {
+    position: absolute; top: 0; right: 60px;
+    background: #26205e; width: 204px; height: 117px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  }
+  .brand img { width: 120px; filter: brightness(0) invert(1); }
+  .brand span { color: #ffffff; font-size: 14px; font-weight: 500; letter-spacing: 1px; }
+
+  .quotes { display: flex; gap: 14px; align-items: stretch; justify-content: center; flex-wrap: wrap; }
+  .card-group {
+    display: flex; flex-direction: column; gap: 10px;
+    border: 2px solid #7cc49a; border-radius: 10px; padding: 0 10px 12px;
+    background: linear-gradient(180deg, #bcd9a0 0%, #a6d1a6 55%, #8fcdb4 100%);
+    border-color: transparent; background-origin: border-box;
+  }
+  .card-group.occurrence .group-label { background: transparent; color: #3f5a46; }
+  .card-group.claims { background: linear-gradient(180deg, #d6d9de 0%, #bfc3ca 55%, #a7acb6 100%); background-origin: border-box; }
+  .card-group.claims .group-label { background: transparent; color: #4a4f5a; }
+  .group-cards { display: flex; gap: 14px; align-items: stretch; flex-wrap: wrap; justify-content: center; flex: 1; }
+  .group-label {
+    height: 28px; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #26265a;
+    background: #7cc49a; color: #ffffff; margin: 0 -10px; border-radius: 7px 7px 0 0;
+  }
+  .card {
+    width: 222px;
+    background: #ffffff;
+    border: 1px solid #ececec;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 16px 13px 40px;
+    transition: box-shadow .15s ease, border-color .15s ease;
+  }
+  .card.selected { border-color: #7cc49a; box-shadow: 0 0 0 2px #7cc49a, 0 2px 8px rgba(0,0,0,0.08); }
+  .card-logo { height: 110px; display: flex; align-items: flex-end; padding: 0 4px 22px; position: relative; }
+  .wordmark { font-size: 26px; line-height: 1; color: #2c2c62; }
+  .wordmark.best { font-weight: 400; }
+  .wordmark.veta { font-weight: 400; letter-spacing: 8px; color: #3a3a4a; }
+  .wordmark.brivado { font-weight: 700; font-style: italic; color: #2b2f8f; letter-spacing: 1px; transform: skewX(-8deg); }
+  .wordmark.placeholder {
+    display: inline-flex; flex-direction: column; align-items: center; gap: 4px;
+    font-weight: 600; color: #26265a; border: 2px dashed #d3d3de; padding: 10px 14px; border-radius: 6px; font-size: 22px;
+  }
+  .wordmark.placeholder small { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #9a9aac; }
+
+  .field { position: relative; border: 2px solid #ececec; border-radius: 6px; margin-top: 18px; }
+  .field label {
+    position: absolute; top: -8px; left: 10px; background: #ffffff; padding: 0 3px;
+    font-size: 10px; color: #555;
+  }
+  .field select {
+    width: 100%; border: 0; background: transparent; font: 500 13px 'Montserrat', sans-serif; color: #2b2b3a;
+    padding: 12px 10px; appearance: none; cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, #555 50%), linear-gradient(135deg, #555 50%, transparent 50%);
+    background-position: calc(100% - 16px) 50%, calc(100% - 12px) 50%;
+    background-size: 4px 4px; background-repeat: no-repeat;
+  }
+  .field select:focus { outline: none; }
+  .field:focus-within { border-color: #9fd2b2; }
+
+  .market { font-size: 13px; font-weight: 600; margin-top: 30px; }
+  .price-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .price { font-size: 27px; font-weight: 600; color: #26265a; line-height: 1; }
+  .per { font-size: 10px; color: #555; margin-top: 4px; }
+  .select-btn {
+    border: 0; border-radius: 8px; padding: 8px 10px;
+    background: linear-gradient(180deg, #a6dcb4, #86c99a);
+    color: #ffffff; font: 600 13px 'Montserrat', sans-serif; letter-spacing: 1.5px; cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  }
+  .card.selected .select-btn { background: linear-gradient(180deg, #4fae6b, #3b9457); }
+  hr { border: 0; border-top: 1px solid #ececec; margin: 24px 0 18px; }
+
+  .features { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .features li { display: grid; grid-template-columns: 18px 1fr; gap: 6px; font-size: 11.5px; color: #6a6a8a; line-height: 1.2; }
+  .features li::before { content: "✔"; color: #8fd07a; font-size: 14px; line-height: 1; }
+  .features li.no::before { content: "✕"; color: #f08a24; }
+  .features li:not(.no) { color: #2b2b3a; }
+  .policy-note {
+    margin-top: 18px; padding: 10px 12px; border-radius: 6px;
+    background: #fff7e0; border: 1px solid #f0d58a;
+    font-size: 11px; line-height: 1.4; color: #5b4a12;
+  }
+  .policy-note strong { display: block; font-size: 11.5px; margin-bottom: 3px; color: #3f330c; }
+
+  .compare { align-self: flex-start; display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 128px; font-size: 12px; color: #444; cursor: pointer; user-select: none; }
+  .compare input { position: absolute; opacity: 0; pointer-events: none; }
+  .compare .tick {
+    width: 30px; height: 30px; border-radius: 50%; background: #e9f1ea;
+    display: flex; align-items: center; justify-content: center; color: #b9dcb0; font-size: 18px;
+  }
+  .compare input:checked + .tick { background: #8fd07a; color: #ffffff; }
+  .compare input:focus-visible + .tick { outline: 2px solid #3b9457; outline-offset: 2px; }
+
+  @media (max-width: 900px) {
+    body { flex-direction: column; }
+    .sidebar { width: 100%; padding: 60px 24px 24px; }
+    .sidebar::after { display: none; }
+    .main { padding: 150px 16px 40px; }
+    .brand { right: 16px; }
+  }
+</style>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="back-link" href="index.html">← Back to submissions</a>
+    <div class="sub-label">Submission Number</div>
+    <div class="sub-number">QMGL0416403</div>
+    <div class="progress">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <span class="progress-pct">100%</span>
+    </div>
+    <ul class="steps">
+      <li>Applicant Information</li>
+      <li>Business Operations</li>
+      <li class="current">Price Indication</li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <div class="brand">
+      <img src="logos/btis.png" alt="btis">
+      <span>MARKETPLACE</span>
+    </div>
+
+    <div class="quotes">
+      <div class="card-group occurrence">
+        <div class="group-label">Occurrence</div>
+        <div class="group-cards">
+      <section class="card">
+        <div class="card-logo"><span class="wordmark best">best choice</span></div>
+        <div class="field"><label>Limits:</label><select><option>1M/2M/2M</option><option>1M/1M/1M</option><option>500K/1M/1M</option></select></div>
+        <div class="field"><label>Deductible:</label><select><option>$2,500</option><option>$1,000</option><option>$5,000</option></select></div>
+        <div class="market">Admitted</div>
+        <div class="price-row"><div><div class="price">$842</div><div class="per">annually</div></div><button class="select-btn">SELECT</button></div>
+        <hr>
+        <ul class="features">
+          <li>Admitted, Rated A (Excellent) by AM Best</li>
+          <li>Limits up to $1M/$2M/$2M</li>
+          <li>Blanket AI (Waiver Incl.)</li>
+          <li>Remove Class Limitation</li>
+          <li>Faulty Workmanship</li>
+          <li class="no">CG 2037 Allow New Res.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div class="card-logo"><span class="wordmark veta">VETA</span></div>
+        <div class="field"><label>Limits:</label><select><option>1M/2M/2M</option><option>1M/1M/1M</option><option>500K/1M/1M</option></select></div>
+        <div class="field"><label>Deductible:</label><select><option>$1,000</option><option>$2,500</option><option>$5,000</option></select></div>
+        <div class="market">Non-Admitted</div>
+        <div class="price-row"><div><div class="price">$1,241</div><div class="per">annually</div></div><button class="select-btn">SELECT</button></div>
+        <hr>
+        <ul class="features">
+          <li>Non-Admitted, Rated A- (Excellent) by AM Best</li>
+          <li>Limits up to $1M/$2M/$2M</li>
+          <li>Blanket AI (Waiver Incl.)</li>
+          <li class="no">Remove Class Limitation</li>
+          <li class="no">Faulty Workmanship</li>
+          <li>CG 2037 Allow New Res</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div class="card-logo"><span class="wordmark brivado">BRIVADO</span></div>
+        <div class="field"><label>Limits:</label><select><option>1M/2M/2M</option><option>1M/1M/1M</option><option>500K/1M/1M</option></select></div>
+        <div class="field"><label>Deductible:</label><select><option>$1,000</option><option>$2,500</option><option>$5,000</option></select></div>
+        <div class="market">Non-Admitted</div>
+        <div class="price-row"><div><div class="price">$889</div><div class="per">annually</div></div><button class="select-btn">SELECT</button></div>
+        <hr>
+        <ul class="features">
+          <li>Non-Admitted, Rated A- (Excellent) by AM Best</li>
+          <li>Limits up to $1M/$2M/$2M</li>
+          <li>Blanket AI (Waiver Included)</li>
+          <li class="no">Remove Class Limitation</li>
+          <li>Faulty Workmanship</li>
+          <li>CG 2037 Allow New Res</li>
+        </ul>
+      </section>
+        </div>
+      </div>
+
+      <div class="card-group claims">
+        <div class="group-label">Claims-Made</div>
+        <div class="group-cards">
+      <!-- Placeholder carrier: replace name, price and features when available -->
+      <section class="card">
+        <div class="card-logo"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span></div>
+        <div class="field"><label>Limits:</label><select><option>1M/2M/2M</option><option>1M/1M/1M</option><option>500K/1M/1M</option></select></div>
+        <div class="field"><label>Deductible:</label><select><option>$1,000</option><option>$2,500</option><option>$5,000</option></select></div>
+        <div class="market">Claims-Made</div>
+        <div class="price-row"><div><div class="price">$799</div><div class="per">annually</div></div><button class="select-btn">SELECT</button></div>
+        <hr>
+        <ul class="features">
+          <li class="no">Rating placeholder</li>
+          <li class="no">Limits placeholder</li>
+          <li class="no">Coverage feature placeholder</li>
+          <li class="no">Coverage feature placeholder</li>
+          <li class="no">Coverage feature placeholder</li>
+          <li class="no">Coverage feature placeholder</li>
+        </ul>
+        <div class="policy-note">
+          <strong>Claims-Made policy</strong>
+          Covers claims made and reported while the policy is active, for work after the retroactive date. Tail coverage (extended reporting period) may be needed if the policy ends.
+        </div>
+      </section>
+        </div>
+      </div>
+
+      <label class="compare">
+        <input type="checkbox" id="compare">
+        <span class="tick">✔</span>
+        Compare Carriers
+      </label>
+    </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('.select-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.card').forEach((c) => c.classList.remove('selected'));
+        btn.closest('.card').classList.add('selected');
+      });
+    });
+  </script>
+</body>
+</html>
