@@ -36,7 +36,9 @@
   }
   .sidebar > :not(.back-link) { position: relative; z-index: 1; }
   .back-link { z-index: 1; }
-  body.on-thanks .sidebar > :not(.back-link) { display: none; }
+  /* Thank you screen: keep the navigation, drop the submission number and progress bar */
+  body.on-thanks .sidebar .sub-label, body.on-thanks .sidebar .sub-number, body.on-thanks .sidebar .progress { display: none; }
+  body.on-thanks .side-links a[href="#thanks"] { color: #26265a; font-weight: 600; }
   .side-divider { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.55); margin: 26px 0 18px; }
   .side-links { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
   .side-links a { font-size: 13px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.3px; }
@@ -65,6 +67,9 @@
   .steps { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 18px; }
   .steps li { font-size: 15px; font-weight: 500; color: #ffffff; letter-spacing: 0.3px; }
   .steps li.current { color: #26265a; font-weight: 600; }
+  .steps a { color: inherit; text-decoration: none; }
+  .steps a:hover { text-decoration: underline; }
+  .steps a:focus-visible { outline: 2px solid #26265a; outline-offset: 2px; }
 
   /* Main */
   .main { flex: 1; position: relative; padding: 144px 0 60px 40px; min-width: 0; }
@@ -262,6 +267,19 @@
   .quote-line .wordmark.veta { letter-spacing: 5px; }
   .quote-line .wordmark.placeholder { font-size: 14px; padding: 5px 8px; }
   .quote-line .wordmark.placeholder small { font-size: 7px; }
+  .carrier-with-tip { display: inline-flex; align-items: center; gap: 8px; position: relative; }
+  .info-tip {
+    width: 18px; height: 18px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+    background: #8fd07a; color: #ffffff; font: 700 11px/18px 'Montserrat', sans-serif; text-align: center;
+  }
+  .info-tip:focus-visible { outline: 2px solid #3b9457; outline-offset: 2px; }
+  .info-tip .tip {
+    display: none; position: absolute; left: 0; top: calc(100% + 8px); z-index: 5; width: 230px;
+    padding: 10px 12px; border-radius: 6px; background: #fff7e0; border: 1px solid #f0d58a;
+    color: #5b4a12; font: 500 11.5px/1.45 'Montserrat', sans-serif; text-align: left;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+  .info-tip:hover .tip, .info-tip:focus .tip { display: block; }
   .quote-line .amount { font-size: 24px; font-weight: 500; color: #26265a; }
   .refresh {
     justify-self: center; border: 0; border-radius: 8px; padding: 7px 14px; background: #ececef; color: #b4b4c0;
@@ -328,9 +346,9 @@
       <span class="progress-pct" id="progressPct">25%</span>
     </div>
     <ul class="steps">
-      <li data-stage="applicant">Applicant Information</li>
-      <li data-stage="operations">Business Operations</li>
-      <li data-stage="price">Price Indication
+      <li data-stage="applicant"><a href="#applicant">Applicant Information</a></li>
+      <li data-stage="operations"><a href="#operations">Business Operations</a></li>
+      <li data-stage="price"><a href="#quote">Price Indication</a>
         <ul class="layout-options" aria-label="Price layout options">
           <li><button type="button" data-layout="plain">Option 01</button></li>
           <li><button type="button" data-layout="shaded">Option 02</button></li>
@@ -385,7 +403,7 @@
           <div class="quote-line"><span class="wordmark best">best choice</span><span class="amount">$842</span></div>
           <div class="quote-line"><span class="wordmark veta">VETA</span><span class="amount">$1,241</span></div>
           <div class="quote-line"><span class="wordmark brivado">BRIVADO</span><span class="amount">$889</span></div>
-          <div class="quote-line"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><span class="amount">$799</span></div>
+          <div class="quote-line"><span class="carrier-with-tip"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><button type="button" class="info-tip" aria-label="About Riveter's claims-made policy">i<span class="tip" role="tooltip">Claims-Made policy: covers claims made and reported while the policy is active, for work after the retroactive date. Tail coverage may be needed if the policy ends.</span></button></span><span class="amount">$799</span></div>
           <button class="refresh" type="button" disabled>Refresh My Quote ⟳</button>
         </aside>
       </div>
@@ -427,7 +445,7 @@
           <div class="quote-line"><span class="wordmark best">best choice</span><span class="amount">$842</span></div>
           <div class="quote-line"><span class="wordmark veta">VETA</span><span class="amount">$1,241</span></div>
           <div class="quote-line"><span class="wordmark brivado">BRIVADO</span><span class="amount">$889</span></div>
-          <div class="quote-line"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><span class="amount">$799</span></div>
+          <div class="quote-line"><span class="carrier-with-tip"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><button type="button" class="info-tip" aria-label="About Riveter's claims-made policy">i<span class="tip" role="tooltip">Claims-Made policy: covers claims made and reported while the policy is active, for work after the retroactive date. Tail coverage may be needed if the policy ends.</span></button></span><span class="amount">$799</span></div>
           <button class="refresh" type="button" disabled>Refresh My Quote ⟳</button>
         </aside>
       </div>
@@ -461,7 +479,7 @@
           <div class="quote-line"><span class="wordmark best">best choice</span><span class="amount">$842</span></div>
           <div class="quote-line"><span class="wordmark veta">VETA</span><span class="amount">$1,241</span></div>
           <div class="quote-line"><span class="wordmark brivado">BRIVADO</span><span class="amount">$889</span></div>
-          <div class="quote-line"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><span class="amount">$799</span></div>
+          <div class="quote-line"><span class="carrier-with-tip"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><button type="button" class="info-tip" aria-label="About Riveter's claims-made policy">i<span class="tip" role="tooltip">Claims-Made policy: covers claims made and reported while the policy is active, for work after the retroactive date. Tail coverage may be needed if the policy ends.</span></button></span><span class="amount">$799</span></div>
           <button class="refresh" type="button" disabled>Refresh My Quote ⟳</button>
         </aside>
       </div>
@@ -565,7 +583,7 @@
     </section>
 
     <!-- Confirmation -->
-    <section class="screen padded" data-screen="thanks" data-stage="price" data-progress="100" hidden>
+    <section class="screen padded" data-screen="thanks" data-stage="done" data-progress="100" hidden>
       <div class="thanks">
         <h1>Thank you!</h1>
         <p>We received your GL application <strong>QMGL0416403</strong>, and it is under review.</p>
