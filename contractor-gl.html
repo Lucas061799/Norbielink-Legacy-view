@@ -336,11 +336,12 @@
   .agree-modal h2 { margin: 18px 0 10px; font-size: 20px; font-weight: 600; color: #26265a; }
   .agree-body {
     font-size: 13px; line-height: 1.6; color: #444; background: #f6f7f9; border: 1px solid #e6e8ec;
-    border-radius: 8px; padding: 12px 14px; max-height: 220px; overflow-y: auto;
+    border-radius: 8px; padding: 12px 14px; max-height: 300px; overflow-y: auto;
   }
   .agree-body p { margin: 0 0 10px; }
   .agree-body p:last-child { margin-bottom: 0; }
-  .agree-check { margin-top: 18px; font-size: 13px; color: #2b2b3a; font-weight: 500; }
+  .agree-check { margin-top: 18px; font-size: 13px; line-height: 1.5; color: #2b2b3a; font-weight: 500; align-items: flex-start; width: auto; }
+  .agree-check .box { flex-shrink: 0; margin-top: 1px; }
   .agree-actions { display: flex; justify-content: space-between; margin-top: 24px; }
   .btn-next:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
   .agree-close {
@@ -665,11 +666,11 @@
         <span class="wordmark placeholder">Riveter<small>Claims-Made</small></span>
         <h2 id="agreeTitle">Before you continue</h2>
         <div class="agree-body">
-          <p>[Placeholder] This quote is for a <strong>claims-made</strong> General Liability policy. Coverage applies only to claims first made and reported during the policy period, for work performed after the retroactive date.</p>
-          <p>[Placeholder] Terms, conditions and pricing are subject to underwriting review.</p>
-          <p>[Placeholder] Confirm that you have reviewed these terms with your client before binding.</p>
+          <p>This quote is for a <strong>claims-made</strong> General Liability policy, not occurrence. Coverage applies only if a claim is first made against the insured and reported while the policy is in force, for injury or damage that occurs after the retroactive date shown on the quote.</p>
+          <p>Coverage continues only while the policy stays in force. Renewing with the same carrier keeps the original retroactive date. If the policy is cancelled, non-renewed, or lapses, or the insured moves to another carrier, later claims are not covered unless an Extended Reporting Period is purchased or the new carrier honors the retro date.</p>
+          <p>Terms, conditions and pricing are subject to underwriting review. Please review these terms with your client before binding.</p>
         </div>
-        <label class="check agree-check"><input type="checkbox" id="agreeBox"><span class="box">✔</span>I have read and agree to the terms above</label>
+        <label class="check agree-check"><input type="checkbox" id="agreeBox"><span class="box">✔</span><span>I have reviewed these terms with my client, and they understand this is a claims-made policy, not occurrence.</span></label>
         <div class="agree-actions">
           <button type="button" class="btn btn-back" data-close>CANCEL</button>
           <button type="button" class="btn btn-next" id="agreeContinue" disabled>CONTINUE</button>
