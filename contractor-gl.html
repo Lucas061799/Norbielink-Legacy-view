@@ -143,6 +143,7 @@
   .field label {
     position: absolute; top: -8px; left: 10px; background: #ffffff; padding: 0 3px;
     font-size: 10px; color: #555;
+    max-width: calc(100% - 20px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .field select {
     width: 100%; border: 0; background: transparent; font: 500 13px 'Montserrat', sans-serif; color: #2b2b3a;
@@ -273,13 +274,47 @@
     background: #8fd07a; color: #ffffff; font: 700 11px/18px 'Montserrat', sans-serif; text-align: center;
   }
   .info-tip:focus-visible { outline: 2px solid #3b9457; outline-offset: 2px; }
-  .info-tip .tip {
-    display: none; position: absolute; left: 0; top: calc(100% + 8px); z-index: 5; width: 230px;
-    padding: 10px 12px; border-radius: 6px; background: #fff7e0; border: 1px solid #f0d58a;
-    color: #5b4a12; font: 500 11.5px/1.45 'Montserrat', sans-serif; text-align: left;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+
+  /* Claims-made slide-in panel (opened by the Riveter "i") */
+  .drawer-backdrop {
+    position: fixed; inset: 0; z-index: 1100; background: rgba(20, 20, 40, 0.35);
+    opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility 0s linear .25s;
   }
-  .info-tip:hover .tip, .info-tip:focus .tip { display: block; }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 1101; width: 380px; max-width: 100%;
+    background: #ffffff; box-shadow: -8px 0 24px rgba(0,0,0,0.15); overflow-y: auto;
+    padding: 28px 28px 32px; transform: translateX(100%); visibility: hidden;
+    transition: transform .3s ease, visibility 0s linear .3s;
+  }
+  body.drawer-open .drawer { transform: none; visibility: visible; transition: transform .3s ease; }
+  /* Wide screens: the panel pushes the page over instead of covering it */
+  @media (min-width: 901px) {
+    body { transition: padding-right .3s ease; }
+    body.drawer-open { padding-right: 380px; }
+    .drawer { box-shadow: -1px 0 0 #e6e8ec, -6px 0 16px rgba(0,0,0,0.06); }
+  }
+  /* Phones: not enough room to push, so the panel slides over a dimmed page */
+  @media (max-width: 900px) {
+    body.drawer-open .drawer-backdrop { opacity: 1; visibility: visible; transition: opacity .25s ease; }
+  }
+  .drawer-close {
+    position: absolute; top: 14px; right: 16px; border: 0; background: none; cursor: pointer;
+    font-size: 26px; line-height: 1; color: #8a8f9c; padding: 4px;
+  }
+  .drawer-close:hover { color: #26265a; }
+  .drawer-close:focus-visible, .drawer a:focus-visible { outline: 2px solid #3b9457; outline-offset: 2px; }
+  .drawer .wordmark.placeholder { font-size: 18px; padding: 7px 11px; }
+  .drawer h2 { margin: 20px 0 14px; font-size: 19px; font-weight: 600; line-height: 1.35; color: #26265a; }
+  .drawer p { margin: 0 0 14px; font-size: 13.5px; line-height: 1.65; color: #3a3a4a; }
+  .drawer .compare-note {
+    padding: 10px 12px; border-radius: 6px; background: #fff7e0; border: 1px solid #f0d58a;
+    color: #5b4a12; font-weight: 500;
+  }
+  .drawer a.learn-more {
+    font-size: 13.5px; font-weight: 600; color: #26265a; text-decoration: underline;
+    text-decoration-color: #7cc49a; text-decoration-thickness: 2px; text-underline-offset: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) { body, .drawer, .drawer-backdrop { transition: none !important; } }
   .quote-line .amount { font-size: 24px; font-weight: 500; color: #26265a; }
   .refresh {
     justify-self: center; border: 0; border-radius: 8px; padding: 7px 14px; background: #ececef; color: #b4b4c0;
@@ -432,7 +467,7 @@
           <div class="quote-line"><span class="wordmark best">best choice</span><span class="amount">$842</span></div>
           <div class="quote-line"><span class="wordmark veta">VETA</span><span class="amount">$1,241</span></div>
           <div class="quote-line"><span class="wordmark brivado">BRIVADO</span><span class="amount">$889</span></div>
-          <div class="quote-line"><span class="carrier-with-tip"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><button type="button" class="info-tip" aria-label="About Riveter's claims-made policy">i<span class="tip" role="tooltip">Claims-Made policy: covers claims made and reported while the policy is active, for work after the retroactive date.</span></button></span><span class="amount">$799</span></div>
+          <div class="quote-line"><span class="carrier-with-tip"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><button type="button" class="info-tip" aria-label="About Riveter's claims-made policy" aria-controls="cmDrawer" aria-expanded="false" data-open-drawer>i</button></span><span class="amount">$799</span></div>
           <button class="refresh" type="button" disabled>Refresh My Quote ⟳</button>
         </aside>
       </div>
@@ -474,7 +509,7 @@
           <div class="quote-line"><span class="wordmark best">best choice</span><span class="amount">$842</span></div>
           <div class="quote-line"><span class="wordmark veta">VETA</span><span class="amount">$1,241</span></div>
           <div class="quote-line"><span class="wordmark brivado">BRIVADO</span><span class="amount">$889</span></div>
-          <div class="quote-line"><span class="carrier-with-tip"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><button type="button" class="info-tip" aria-label="About Riveter's claims-made policy">i<span class="tip" role="tooltip">Claims-Made policy: covers claims made and reported while the policy is active, for work after the retroactive date.</span></button></span><span class="amount">$799</span></div>
+          <div class="quote-line"><span class="carrier-with-tip"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><button type="button" class="info-tip" aria-label="About Riveter's claims-made policy" aria-controls="cmDrawer" aria-expanded="false" data-open-drawer>i</button></span><span class="amount">$799</span></div>
           <button class="refresh" type="button" disabled>Refresh My Quote ⟳</button>
         </aside>
       </div>
@@ -508,7 +543,7 @@
           <div class="quote-line"><span class="wordmark best">best choice</span><span class="amount">$842</span></div>
           <div class="quote-line"><span class="wordmark veta">VETA</span><span class="amount">$1,241</span></div>
           <div class="quote-line"><span class="wordmark brivado">BRIVADO</span><span class="amount">$889</span></div>
-          <div class="quote-line"><span class="carrier-with-tip"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><button type="button" class="info-tip" aria-label="About Riveter's claims-made policy">i<span class="tip" role="tooltip">Claims-Made policy: covers claims made and reported while the policy is active, for work after the retroactive date.</span></button></span><span class="amount">$799</span></div>
+          <div class="quote-line"><span class="carrier-with-tip"><span class="wordmark placeholder">Riveter<small>Claims-Made</small></span><button type="button" class="info-tip" aria-label="About Riveter's claims-made policy" aria-controls="cmDrawer" aria-expanded="false" data-open-drawer>i</button></span><span class="amount">$799</span></div>
           <button class="refresh" type="button" disabled>Refresh My Quote ⟳</button>
         </aside>
       </div>
@@ -594,8 +629,8 @@
           <li class="no">Coverage feature placeholder</li>
         </ul>
         <div class="policy-note">
-          <strong>Claims-Made policy</strong>
-          Covers claims made and reported while the policy is active, for work after the retroactive date.
+          <strong>Claims-Made policy (not Occurrence)</strong>
+          Covers claims first made and reported while the policy is active, for injury or damage occurring after the retroactive date. No coverage for claims made after the policy ends unless an Extended Reporting Period is purchased.
         </div>
       </section>
         </div>
@@ -610,6 +645,18 @@
       <div class="nav quote-nav"><button class="btn btn-back" type="button" data-go="operations">BACK</button><button class="btn btn-next" type="button" data-go="thanks">NEXT</button></div>
     </div>
     </section>
+
+    <!-- Claims-made slide-in panel (opened by the Riveter "i" in Quote in Progress) -->
+    <div class="drawer-backdrop" data-close-drawer></div>
+    <aside class="drawer" id="cmDrawer" role="complementary" aria-labelledby="cmDrawerTitle">
+      <button type="button" class="drawer-close" aria-label="Close" data-close-drawer>×</button>
+      <span class="wordmark placeholder">Riveter<small>Claims-Made</small></span>
+      <h2 id="cmDrawerTitle">Claims-Made policy, not Occurrence</h2>
+      <p>This policy covers claims first made against your insured while the policy is active (and only for incidents after the retroactive date). It does not cover claims made after the policy ends unless an Extended Reporting Period is purchased.</p>
+      <p class="compare-note">Not a like-for-like comparison with the Occurrence quotes.</p>
+      <!-- Placeholder link: point at the real claims-made explainer when it exists -->
+      <a class="learn-more" href="#" data-learn-more>Learn more</a>
+    </aside>
 
     <!-- Riveter acknowledgement popup (opened by Riveter's SELECT) -->
     <div class="agree-backdrop" id="agreeModal" hidden>
@@ -656,6 +703,26 @@
         else selectCard(card);
       });
     });
+
+    // Claims-made slide-in panel
+    const drawer = document.getElementById('cmDrawer');
+    let drawerOpener = null;
+    function openDrawer(opener) {
+      drawerOpener = opener;
+      document.body.classList.add('drawer-open');
+      document.querySelectorAll('[data-open-drawer]').forEach((b) => b.setAttribute('aria-expanded', 'true'));
+      drawer.querySelector('.drawer-close').focus();
+    }
+    function closeDrawer() {
+      if (!document.body.classList.contains('drawer-open')) return;
+      document.body.classList.remove('drawer-open');
+      document.querySelectorAll('[data-open-drawer]').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+      if (drawerOpener) drawerOpener.focus();
+    }
+    document.querySelectorAll('[data-open-drawer]').forEach((b) => b.addEventListener('click', () => openDrawer(b)));
+    document.querySelectorAll('[data-close-drawer]').forEach((el) => el.addEventListener('click', closeDrawer));
+    drawer.querySelector('[data-learn-more]').addEventListener('click', (e) => e.preventDefault());
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
 
     // Riveter acknowledgement popup
     const agreeModal = document.getElementById('agreeModal');
